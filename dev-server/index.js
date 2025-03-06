@@ -3,6 +3,8 @@ const proxy = require('express-http-proxy');
 const webpackDevMiddleware = require('webpack-dev-middleware');
 const webpack = require('webpack');
 
+require('dotenv').config();
+
 const compiler = webpack(require('../webpack.config.js'));
 const handler = require('./handler');
 const log = require('./log');
@@ -15,6 +17,17 @@ app.disable('x-powered-by');
 
 // Server setup
 app.use(log());
+
+app.get('/session', (req, res) => {
+    res.status(200).json({
+        flags: {
+            project_comments_enabled: true,
+            gallery_comments_enabled: true,
+            userprofile_comments_enabled: true,
+            everything_is_totally_normal: false
+        }
+    });
+});
 
 // Bind routes
 routes.forEach(route => {
